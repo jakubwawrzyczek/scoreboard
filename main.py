@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
+
+zawodnicy = ('Krzysztof Kowalski', 'Jan Kowalski', 'Robert Lewandowski', 'Jan Kowalski2', 'Jan Kowalski3')
+
 root = tk.Tk()
 
 fSc = tk.IntVar()
