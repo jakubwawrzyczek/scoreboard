@@ -2,17 +2,13 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 
-zawodnicy = ('Krzysztof Kowalski', 'Jan Kowalski', 'Robert Lewandowski', 'Jan Kowalski2', 'Jan Kowalski3')
-
 root = tk.Tk()
 
 fSc = tk.IntVar()
 sSc = tk.IntVar()
 fNm = tk.StringVar()
 sNm = tk.StringVar()
-
-rC = tk.StringVar()
-yC = tk.StringVar()
+minute = tk.StringVar()
 
 def refreshAction():
     first_score = open('first_score.txt', 'w+')
@@ -31,15 +27,23 @@ def refreshAction():
     first_name.write(str(sNm.get()))
     first_name.close()
 
-def cards():
-    red_cards = open('red_cards', 'a')
-    red_cards.write(rC.get() + '\n')
-    red_cards.close()
+kutas = []
 
-    yellow_cards = open('yellow_cards', 'a')
-    yellow_cards.write(yC.get() + '\n')
-    yellow_cards.close()
-
+def playerSelect(a):
+    selected_indices = playerList.curselection()
+    selected = ",".join([playerList.get(i) for i in selected_indices])
+    kutas.append(selected)
+def actionSelect(b):
+    # get selected indices
+    selected_indices = actionList.curselection()
+    # get selected items
+    selected = ",".join([actionList.get(i) for i in selected_indices])
+    kutas.append(selected)
+def actionFileWrite():
+    minuteSelected =minute.get()+"'"
+    kutas.append(minuteSelected)
+    if kutas[1] ==
+    print(kutas[0], kutas[3])
 frame = tk.Frame(root)
 root.title("scoreboard manager")
 frame.pack()
@@ -84,19 +88,29 @@ btn = tk.Button(frame2b, text="zaaktualizuj wynik", command=refreshAction)
 btn.pack(side=BOTTOM)
 
 sep = ttk.Separator(frame3, orient='horizontal')
-sep.pack(fill='x',side=TOP)
+sep.pack(fill='x', side=TOP)
 
-redCard = tk.Label(frame3, text='Czerwona kartka [imie/nazwisko/minuta]')
-redCard.pack(side=LEFT)
-redCardEntry = tk.Entry(frame3, textvariable=rC)
-redCardEntry.pack(side=LEFT)
+playerList = ('Krzysztof Kowalski', 'Jan Debil', 'Robert Lewandowski', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan')
+playerListVar = tk.StringVar(value=playerList)
 
-yellowCard = tk.Label(frame4, text='Zolta kartka [imie/nazwisko/minuta]')
-yellowCard.pack(side=LEFT)
-yellowCardEntry = tk.Entry(frame4, textvariable=yC)
-yellowCardEntry.pack(side=LEFT)
+actionList = ('Gol', 'Czerwona Kartka', 'Zolta kartka')
+actionListVar = tk.StringVar(value=actionList)
 
-btn2 = tk.Button(text='zatwierdz', command=cards)
-btn2.pack()
+frame3.columnconfigure(0, weight=1)
+frame3.columnconfigure(0, weight=1)
+
+playerList = tk.Listbox(frame3, listvariable=playerListVar, height=6, selectmode='browse')
+playerList.pack(side=LEFT)
+playerList.bind('<<ListboxSelect>>', playerSelect)
+
+actionList = tk.Listbox(frame3, listvariable=actionListVar, height=6, selectmode='browse')
+actionList.pack(side=LEFT)
+actionList.bind('<<ListboxSelect>>', actionSelect)
+
+minuteEntry = tk.Entry(frame3, textvariable=minute)
+minuteEntry.pack()
+
+btn4 = tk.Button(frame4, text='zatwierdz', command=actionFileWrite)
+btn4.pack(side=LEFT)
 
 root.mainloop()
