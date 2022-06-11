@@ -68,8 +68,12 @@ def actionFileWrite():
         actionData.clear()
     else:
         actionData.clear()
-frame = tk.Frame(root)
+
+pixel = tk.PhotoImage(width=1, height=1)
+
 root.title("scoreboard manager")
+
+frame = tk.Frame(root)
 frame.pack()
 
 frame2 = tk.Frame(root)
@@ -79,49 +83,69 @@ frame2b = tk.Frame(root)
 frame2b.pack(side=TOP)
 
 frame2c = tk.Frame(root)
-frame2c.pack(side=TOP,  fill="x", pady=5)
+frame2c.pack(side=TOP,
+             fill="x",
+             pady=5)
 
 frame3a = tk.Frame(root)
 frame3a.pack(side=TOP)
 
-frame3b = tk.Frame(root)
-frame3b.pack(side=TOP, pady=5)
+name1 = tk.Label(frame,
+                 text="Druzyna 1")
+name1.grid(row=1, column=1)
 
-frame4 = tk.Frame(root)
-frame4.pack(side=BOTTOM)
+e1 = tk.Entry(frame,
+              textvariable=fNm)
+e1.grid(row=1, column=2)
 
-frame5 = tk.Frame(root)
-frame5.pack(side=BOTTOM)
+name2 = tk.Label(frame2,
+                 text="Druzyna 2")
+name2.grid(row=2, column=1)
 
-name1 = tk.Label(frame, text="Druzyna 1")
-name1.pack(side=LEFT)
+e2 = tk.Entry(frame2,
+              textvariable=sNm)
+e2.grid(row=2, column=2)
 
-e1 = tk.Entry(frame, textvariable=fNm)
-e1.pack(side=LEFT)
+score1 = tk.Label(frame,
+                  text="Wynik")
+score1.grid(row=1, column=3)
 
-name2 = tk.Label(frame2, text="Druzyna 2")
-name2.pack(side=LEFT)
+score1Entry = tk.Entry(frame,
+                       textvariable=fSc)
+score1Entry.grid(row=1, column=4)
 
-e2 = tk.Entry(frame2, textvariable=sNm)
-e2.pack(side=LEFT)
+score2 = tk.Label(frame2,
+                  text="Wynik")
+score2.grid(row=2, column=3)
 
-score1 = tk.Label(frame, text="Wynik")
-score1.pack(side=LEFT)
+score2Entry = tk.Entry(frame2,
+                       textvariable=sSc)
+score2Entry.grid(row=2, column=4)
 
-score1Entry = tk.Entry(frame, textvariable=fSc)
-score1Entry.pack(side=LEFT)
+btn = tk.Button(frame2b,
+                text="Zaaktualizuj Wynik",
+                command=refreshAction,
+                image=pixel,
+                height=30,
+                width=152,
+                compound="c"
+                )
+btn.grid(row=1, column=1)
 
-score2 = tk.Label(frame2, text="Wynik")
-score2.pack(side=LEFT)
+btnTimer = tk.Button(frame2b,
+                text="Wlacz Timer",
+                command=refreshAction,
+                image=pixel,
+                height=30,
+                width=152,
+                compound="c"
+                )
+btnTimer.grid(row=1, column=2)
 
-score2Entry = tk.Entry(frame2, textvariable=sSc)
-score2Entry.pack(side=LEFT)
-
-btn = tk.Button(frame2b, text="Zaaktualizuj Wynik", command=refreshAction)
-btn.pack(side=TOP)
-
-separator = ttk.Separator(frame2c, orient='horizontal')
-separator.pack(fill='x', side=BOTTOM)
+separator = ttk.Separator(frame2c,
+                          orient='horizontal')
+separator.pack(fill='x',
+               side=BOTTOM)
 
 playerList = ('Krzysztof Kowalski', 'Jan Debil', 'Robert Lewandowski', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan')
 playerListVar = tk.StringVar(value=playerList)
@@ -129,33 +153,76 @@ playerListVar = tk.StringVar(value=playerList)
 actionList = ('Gol', 'Czerwona Kartka', 'Zolta Kartka')
 actionListVar = tk.StringVar(value=actionList)
 
-playerList = tk.Listbox(frame3b, listvariable=playerListVar, height=6, selectmode='extended')
-playerList.pack(side=LEFT, padx=3)
-playerList.bind('<<ListboxSelect>>', playerSelect)
+playerList = tk.Listbox(frame3a,
+                        listvariable=playerListVar,
+                        height=6,
+                        selectmode='extended')
+playerList.grid(row=2,
+                column=1)
+playerList.bind('<<ListboxSelect>>',
+                playerSelect)
 
-actionList = tk.Listbox(frame3b, listvariable=actionListVar, height=6, selectmode='browse')
-actionList.pack(side=LEFT, padx=3)
-actionList.bind('<<ListboxSelect>>', actionSelect)
+actionList = tk.Listbox(frame3a,
+                        listvariable=actionListVar,
+                        height=6,
+                        selectmode='browse')
+actionList.grid(row=2,
+                column=2)
+actionList.bind('<<ListboxSelect>>',
+                actionSelect)
 
-minuteEntry = tk.Entry(frame3b, textvariable=minute)
-minuteEntry.pack(side=TOP, padx=1)
+minuteEntry = tk.Entry(frame3a,
+                       textvariable=minute)
+minuteEntry.grid(row=2,
+                 column=3,
+                 sticky='N')
 
-playerLabel = tk.Label(frame3a, text='Wybierz Gracza', font=('Helvetica', 14, 'bold'))
-playerLabel.grid(row=1, column=1, padx=40)
+playerLabel = tk.Label(frame3a,
+                       text='Wybierz Gracza',
+                       font=('Helvetica', 14, 'bold'))
+playerLabel.grid(row=1,
+                 column=1)
 
-actionLabel = tk.Label(frame3a, text='Wybierz Akcje', font=('Helvetica', 14, 'bold'))
-actionLabel.grid(row=1, column=2, padx=40)
+actionLabel = tk.Label(frame3a,
+                       text='Wybierz Akcje',
+                       font=('Helvetica', 14, 'bold'))
+actionLabel.grid(row=1,
+                 column=2)
 
-minuteLabel = tk.Label(frame3a, text='Wpisz Minute', font=('Helvetica', 14, 'bold'))
-minuteLabel.grid(row=1, column=3, padx=40)
+minuteLabel = tk.Label(frame3a,
+                       text='Wpisz Minute',
+                       font=('Helvetica', 14, 'bold'))
+minuteLabel.grid(row=1,
+                 column=3)
 
-btn4 = tk.Button(frame3b, text='Zatwierdz', command=actionFileWrite)
-btn4.pack(side=TOP)
+btn4 = tk.Button(frame3a,
+                 text='Zatwierdz',
+                 command=actionFileWrite,
+                 image=pixel,
+                 height=30,
+                 width=182,
+                 compound="c")
+btn4.grid(row=2,
+          column=3,
+          sticky='')
 
-btn5 = tk.Button(frame3b, text='Cofnij', command=lastActionReturn)
-btn5.pack(side=TOP)
+btn5 = tk.Button(frame3a,
+                 text='Cofnij',
+                 command=lastActionReturn,
+                 image=pixel,
+                 height=30,
+                 width=182,
+                 compound="c")
+btn5.grid(row=2,
+          column=3,
+          sticky='S')
 
-btn6 = tk.Button(frame5, text='Reset danych')
-btn6.pack()
+btn6 = tk.Button(frame3a,
+                 text='Reset danych',
+                 image=pixel,
+                 height=30,
+                 width=152,
+                 compound="c")
+btn6.grid(row=3, column=2)
 
 root.mainloop()
