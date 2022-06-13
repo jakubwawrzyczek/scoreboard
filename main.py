@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
+import subprocess
+import os
+import sys
 
 root = tk.Tk()
 
@@ -32,19 +35,48 @@ lastAction = ''
 
 def lastActionReturn():
     global lastAction
-
+    if lastAction == 'Gol':
+        fd = open("scorers_table.txt", "r")
+        d = fd.read()
+        fd.close()
+        m = d.split("\n")
+        s = "\n".join(m[:-1])
+        fd = open("scorers_table.txt", "w+")
+        for i in range(len(s)):
+            fd.write(s[i])
+        fd.close()
+    elif lastAction == 'Czerwona Kartka':
+        fd = open("red_cards.txt", "r")
+        d = fd.read()
+        fd.close()
+        m = d.split("\n")
+        s = "\n".join(m[:-1])
+        fd = open("red_cards.txt", "w+")
+        for i in range(len(s)):
+            fd.write(s[i])
+        fd.close()
+    elif lastAction == 'Zolta Kartka':
+        fd = open("yellow_cards.txt", "r")
+        d = fd.read()
+        fd.close()
+        m = d.split("\n")
+        s = "\n".join(m[:-1])
+        fd = open("yellow_cards.txt", "w+")
+        for i in range(len(s)):
+            fd.write(s[i])
+        fd.close()
 
 def playerSelect(a):
     selected_indices = playerList.curselection()
     print(selected_indices)
     selected = ",".join([playerList.get(i) for i in selected_indices])
     actionData.append(selected)
+
 def actionSelect(b):
-    # get selected indices
     selected_indices = actionList.curselection()
-    # get selected items
     selected = ",".join([actionList.get(i) for i in selected_indices])
     actionData.append(selected)
+
 def actionFileWrite():
     global actionData
     global lastAction
@@ -52,22 +84,36 @@ def actionFileWrite():
     minuteSelected = minute.get()+"'"
     actionData.append(minuteSelected)
     if actionData[1] == 'Gol':
-        scorers_table = open('scorers_table', 'a')
-        scorers_table.write(actionData[0] + ' ' + actionData[2] + '\n')
+        scorers_table = open('scorers_table.txt', 'a')
+        scorers_table.write('\n' + actionData[0] + ' ' + actionData[2])
         lastAction = 'Gol'
         actionData.clear()
     elif actionData[1] == 'Czerwona Kartka':
-        red_cards = open('red_cards', 'a')
-        red_cards.write(actionData[0] + ' ' + actionData[2] + '\n')
+        red_cards = open('red_cards.txt', 'a')
+        red_cards.write('\n' + actionData[0] + ' ' + actionData[2])
         lastAction = 'Czerwona Kartka'
         actionData.clear()
     elif actionData[1] == 'Zolta Kartka':
-        yellow_cards = open('yellow_cards', 'a')
-        yellow_cards.write(actionData[0] + ' ' + actionData[2] + '\n')
+        yellow_cards = open('yellow_cards.txt', 'a')
+        yellow_cards.write('\n' + actionData[0] + ' ' + actionData[2]   )
         lastAction = 'Zolta Kartka'
         actionData.clear()
     else:
         actionData.clear()
+
+def contentClear():
+    files = ['first_name.txt', 'first_score.txt','second_name.txt', 'second_score.txt', 'red_cards.txt', 'yellow_cards.txt', 'scorers_table.txt']
+    for i in files:
+        f = open(i, 'w')
+        f.close()
+
+def timerStart():
+    p = subprocess.Popen([sys.executable, os.path.expanduser('~/PycharmProjects/scoreboard/timer.py')],
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT)
+
+def programStop():
+    os.system('pkill -9 -f timer.py')
 
 pixel = tk.PhotoImage(width=1, height=1)
 
@@ -134,13 +180,22 @@ btn.grid(row=1, column=1)
 
 btnTimer = tk.Button(frame2b,
                 text="Wlacz Timer",
-                command=refreshAction,
+                command=timerStart,
                 image=pixel,
                 height=30,
                 width=152,
                 compound="c"
                 )
 btnTimer.grid(row=1, column=2)
+
+btnTimer2 = tk.Button(frame2b,
+                 text='Wylacz timer',
+                 command=programStop,
+                 image=pixel,
+                 height=30,
+                 width=152,
+                 compound="c")
+btnTimer2.grid(row=1, column=3, columnspan=5)
 
 separator = ttk.Separator(frame2c,
                           orient='horizontal')
@@ -219,10 +274,14 @@ btn5.grid(row=2,
 
 btn6 = tk.Button(frame3a,
                  text='Reset danych',
+                 command=contentClear,
                  image=pixel,
                  height=30,
                  width=152,
                  compound="c")
-btn6.grid(row=3, column=2)
+btn6.grid(row=3,
+          column=0,
+          columnspan=5)
+
 
 root.mainloop()
