@@ -7,3 +7,4 @@ while True:
     timer.write(str(round((curr_time - start_time) // 60)).zfill(2) + ':' + str(round(((curr_time - start_time) % 60))).zfill(2))
     timer.close()
     time.sleep(1)
+    
