@@ -13,27 +13,20 @@ fNm = tk.StringVar()
 sNm = tk.StringVar()
 minute = tk.StringVar()
 
-def refreshAction():
-    first_score = open('first_score.txt', 'w+')
-    first_score.write(str(fSc.get()))
-    first_score.close()
-
-    second_score = open('second_score.txt', 'w+')
-    second_score.write(str(sSc.get()))
-    second_score.close()
-
+def refreshAction(): #refreshes team names in OBS
     first_name = open('first_name.txt', 'w')
     first_name.write(str(fNm.get()))
     first_name.close()
 
-    first_name = open('second_name.txt', 'w')
-    first_name.write(str(sNm.get()))
-    first_name.close()
+    second_name = open('second_name.txt', 'w')
+    second_name.write(str(sNm.get()))
+    second_name.close()
 
 actionData = []
 lastAction = ''
+team = ''
 
-def lastActionReturn():
+def lastActionReturn(): #returns last submitted action
     global lastAction
     if lastAction == 'Gol':
         fd = open("scorers_table.txt", "r")
@@ -66,40 +59,71 @@ def lastActionReturn():
             fd.write(s[i])
         fd.close()
 
-def playerSelect(a):
-    selected_indices = playerList.curselection()
+def playerSelectA(a):
+    global team
+    selected_indices = playerListA.curselection()
     print(selected_indices)
-    selected = ",".join([playerList.get(i) for i in selected_indices])
+    selected = ",".join([playerListA.get(i) for i in selected_indices])
     actionData.append(selected)
+    team = 'a'
+    print(selected)
+
+def playerSelectB(a):
+    global team
+    selected_indices = playerListB.curselection()
+    print(selected_indices)
+    selected = ",".join([playerListB.get(i) for i in selected_indices])
+    actionData.append(selected)
+    team = 'b'
+    print(selected)
 
 def actionSelect(b):
     selected_indices = actionList.curselection()
     selected = ",".join([actionList.get(i) for i in selected_indices])
     actionData.append(selected)
 
-def actionFileWrite():
+def actionFileWrite(): #writes current name and minute to folder
     global actionData
     global lastAction
     actionData = [ele for ele in actionData if ele.strip()]
     minuteSelected = minute.get()+"'"
     actionData.append(minuteSelected)
-    if actionData[1] == 'Gol':
-        scorers_table = open('scorers_table.txt', 'a')
-        scorers_table.write('\n' + actionData[0] + ' ' + actionData[2])
-        lastAction = 'Gol'
-        actionData.clear()
-    elif actionData[1] == 'Czerwona Kartka':
-        red_cards = open('red_cards.txt', 'a')
-        red_cards.write('\n' + actionData[0] + ' ' + actionData[2])
-        lastAction = 'Czerwona Kartka'
-        actionData.clear()
-    elif actionData[1] == 'Zolta Kartka':
-        yellow_cards = open('yellow_cards.txt', 'a')
-        yellow_cards.write('\n' + actionData[0] + ' ' + actionData[2]   )
-        lastAction = 'Zolta Kartka'
-        actionData.clear()
-    else:
-        actionData.clear()
+    if team == 'a':
+        if actionData[1] == 'Gol':
+            scorers_table = open('scorers_table_a.txt', 'a')
+            scorers_table.write('\n' + actionData[0] + ' ' + actionData[2])
+            lastAction = 'Gol'
+            actionData.clear()
+        elif actionData[1] == 'Czerwona Kartka':
+            red_cards = open('red_cards_a.txt', 'a')
+            red_cards.write('\n' + actionData[0] + ' ' + actionData[2])
+            lastAction = 'Czerwona Kartka'
+            actionData.clear()
+        elif actionData[1] == 'Zolta Kartka':
+            yellow_cards = open('yellow_cards_a.txt', 'a')
+            yellow_cards.write('\n' + actionData[0] + ' ' + actionData[2])
+            lastAction = 'Zolta Kartka'
+            actionData.clear()
+        else:
+            actionData.clear()
+    elif team == 'b':
+        if actionData[1] == 'Gol':
+            scorers_table = open('scorers_table_b.txt', 'a')
+            scorers_table.write('\n' + actionData[0] + ' ' + actionData[2])
+            lastAction = 'Gol'
+            actionData.clear()
+        elif actionData[1] == 'Czerwona Kartka':
+            red_cards = open('red_cards_b.txt', 'a')
+            red_cards.write('\n' + actionData[0] + ' ' + actionData[2])
+            lastAction = 'Czerwona Kartka'
+            actionData.clear()
+        elif actionData[1] == 'Zolta Kartka':
+            yellow_cards = open('yellow_cards_b.txt', 'a')
+            yellow_cards.write('\n' + actionData[0] + ' ' + actionData[2])
+            lastAction = 'Zolta Kartka'
+            actionData.clear()
+        else:
+            actionData.clear()
 
 def contentClear():
     files = ['first_name.txt', 'first_score.txt','second_name.txt', 'second_score.txt', 'red_cards.txt', 'yellow_cards.txt', 'scorers_table.txt']
@@ -123,7 +147,9 @@ frame = tk.Frame(root)
 frame.pack()
 
 frame2 = tk.Frame(root)
-frame2.pack(side=TOP)
+frame2.pack(side=TOP,
+             fill="x",
+             pady=5)
 
 frame2b = tk.Frame(root)
 frame2b.pack(side=TOP)
@@ -137,36 +163,25 @@ frame3a = tk.Frame(root)
 frame3a.pack(side=TOP)
 
 name1 = tk.Label(frame,
-                 text="Druzyna 1")
+                 text="Team A")
 name1.grid(row=1, column=1)
 
 e1 = tk.Entry(frame,
               textvariable=fNm)
-e1.grid(row=1, column=2)
+e1.grid(row=2, column=1)
 
-name2 = tk.Label(frame2,
-                 text="Druzyna 2")
-name2.grid(row=2, column=1)
+name2 = tk.Label(frame,
+                 text="Team B")
+name2.grid(row=1, column=2)
 
-e2 = tk.Entry(frame2,
+e2 = tk.Entry(frame,
               textvariable=sNm)
 e2.grid(row=2, column=2)
 
-score1 = tk.Label(frame,
-                  text="Wynik")
-score1.grid(row=1, column=3)
-
-score1Entry = tk.Entry(frame,
-                       textvariable=fSc)
-score1Entry.grid(row=1, column=4)
-
-score2 = tk.Label(frame2,
-                  text="Wynik")
-score2.grid(row=2, column=3)
-
-score2Entry = tk.Entry(frame2,
-                       textvariable=sSc)
-score2Entry.grid(row=2, column=4)
+separator3 = ttk.Separator(frame2,
+                          orient='horizontal')
+separator3.pack(fill='x',
+               side=BOTTOM)
 
 btn = tk.Button(frame2b,
                 text="Zaaktualizuj Wynik",
@@ -202,53 +217,77 @@ separator = ttk.Separator(frame2c,
 separator.pack(fill='x',
                side=BOTTOM)
 
-playerList = ('Krzysztof Kowalski', 'Jan Debil', 'Robert Lewandowski', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan', 'Robert', 'Jan', 'Jan')
-playerListVar = tk.StringVar(value=playerList)
+playerListA = []
+teamA = open('team_a_players.txt', 'r').readlines()
+for i in teamA:
+    playerListA.append(i)
+playerListVarA = tk.StringVar(value=playerListA)
+
+playerListB = []
+teamB = open('team_b_players.txt', 'r').readlines()
+for i in teamB:
+    playerListB.append(i)
+playerListVarB = tk.StringVar(value=playerListB)
 
 actionList = ('Gol', 'Czerwona Kartka', 'Zolta Kartka')
 actionListVar = tk.StringVar(value=actionList)
 
-playerList = tk.Listbox(frame3a,
-                        listvariable=playerListVar,
+playerListA = tk.Listbox(frame3a,
+                        listvariable=playerListVarA,
                         height=6,
                         selectmode='extended')
-playerList.grid(row=2,
+playerListA.grid(row=2,
                 column=1)
-playerList.bind('<<ListboxSelect>>',
-                playerSelect)
+playerListA.bind('<<ListboxSelect>>',
+                playerSelectA)
+
+playerListB = tk.Listbox(frame3a,
+                        listvariable=playerListVarB,
+                        height=6,
+                        selectmode='extended')
+playerListB.grid(row=2,
+                column=2)
+playerListB.bind('<<ListboxSelect>>',
+                playerSelectB)
 
 actionList = tk.Listbox(frame3a,
                         listvariable=actionListVar,
                         height=6,
                         selectmode='browse')
 actionList.grid(row=2,
-                column=2)
+                column=3)
 actionList.bind('<<ListboxSelect>>',
                 actionSelect)
 
 minuteEntry = tk.Entry(frame3a,
                        textvariable=minute)
 minuteEntry.grid(row=2,
-                 column=3,
+                 column=4,
                  sticky='N')
 
-playerLabel = tk.Label(frame3a,
-                       text='Wybierz Gracza',
+playerSelectA = tk.Label(frame3a,
+                       text='Team A',
                        font=('Helvetica', 14, 'bold'))
-playerLabel.grid(row=1,
+playerSelectA.grid(row=1,
                  column=1)
+
+playerSelectB = tk.Label(frame3a,
+                       text='Team B',
+                       font=('Helvetica', 14, 'bold'))
+playerSelectB.grid(row=1,
+                 column=2)
 
 actionLabel = tk.Label(frame3a,
                        text='Wybierz Akcje',
                        font=('Helvetica', 14, 'bold'))
 actionLabel.grid(row=1,
-                 column=2)
+                 column=3)
 
 minuteLabel = tk.Label(frame3a,
                        text='Wpisz Minute',
                        font=('Helvetica', 14, 'bold'))
 minuteLabel.grid(row=1,
-                 column=3)
+                 column=4)
 
 btn4 = tk.Button(frame3a,
                  text='Zatwierdz',
@@ -258,7 +297,7 @@ btn4 = tk.Button(frame3a,
                  width=182,
                  compound="c")
 btn4.grid(row=2,
-          column=3,
+          column=4,
           sticky='')
 
 btn5 = tk.Button(frame3a,
@@ -269,7 +308,7 @@ btn5 = tk.Button(frame3a,
                  width=182,
                  compound="c")
 btn5.grid(row=2,
-          column=3,
+          column=4,
           sticky='S')
 
 btn6 = tk.Button(frame3a,
